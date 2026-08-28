@@ -43,9 +43,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-primary text-white py-8 px-4 shadow-lg">
+      <header className="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-8 px-4 shadow-lg border-b border-blue-400/30">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-2">
             <Sparkles size={32} />
@@ -85,21 +85,21 @@ export default function Home() {
         {step === 'suggestions' && (
           <section>
             {/* Progress Bar */}
-            <div className="h-1 bg-gray-300 rounded-full mb-8 overflow-hidden">
+            <div className="h-1 bg-slate-700 rounded-full mb-8 overflow-hidden">
               <div
-                className="h-full bg-gradient-primary transition-all duration-300"
+                className="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300"
                 style={{ width: '50%' }}
               />
             </div>
 
             {/* Goal Display */}
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-8">
-              <p className="text-gray-900 mb-2">
-                <strong className="text-primary-700">Goal:</strong> {state.goal || state.originalInput}
+            <div className="bg-slate-700/40 border-2 border-blue-400/30 rounded-lg p-4 mb-8">
+              <p className="text-slate-200 mb-2">
+                <strong className="text-blue-300">Goal:</strong> {state.goal || state.originalInput}
               </p>
               {state.category && (
-                <p className="text-gray-900">
-                  <strong className="text-primary-700">Category:</strong> {state.category}
+                <p className="text-slate-200">
+                  <strong className="text-blue-300">Category:</strong> {state.category}
                 </p>
               )}
             </div>
@@ -126,7 +126,7 @@ export default function Home() {
                 <button
                   onClick={handleGeneratePrompt}
                   disabled={loading}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-accent text-white rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0 transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   <Zap size={18} />
                   {loading ? 'Generating...' : 'Generate Prompt'}
@@ -135,7 +135,7 @@ export default function Home() {
               <button
                 onClick={resetAll}
                 disabled={loading}
-                className="flex items-center gap-2 px-6 py-3 bg-gray-200 text-gray-900 rounded-lg font-semibold hover:bg-gray-300 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 <RotateCcw size={18} />
                 Start Over
@@ -144,15 +144,15 @@ export default function Home() {
 
             {/* Selected Items */}
             {state.selectedSuggestions.length > 0 && (
-              <div className="bg-accent-50 border-2 border-accent-200 rounded-lg p-4 mt-6">
-                <p className="text-sm font-semibold text-accent-700 mb-3 uppercase tracking-wide">
+              <div className="bg-slate-700/40 border-2 border-green-500/30 rounded-lg p-4 mt-6">
+                <p className="text-xs font-semibold text-green-300 mb-3 uppercase tracking-wide">
                   Your selections so far
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {state.selectedSuggestions.map((suggestion, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-white border border-accent-300 rounded-full text-sm text-accent-900 font-medium"
+                      className="px-3 py-1 bg-slate-700 border border-green-400/40 rounded-full text-sm text-green-300 font-medium"
                     >
                       {suggestion}
                     </span>
@@ -162,15 +162,15 @@ export default function Home() {
             )}
 
             {state.customInputs.length > 0 && (
-              <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 mt-4">
-                <p className="text-sm font-semibold text-amber-700 mb-3 uppercase tracking-wide">
+              <div className="bg-slate-700/40 border-2 border-amber-500/30 rounded-lg p-4 mt-4">
+                <p className="text-xs font-semibold text-amber-300 mb-3 uppercase tracking-wide">
                   Your custom additions
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {state.customInputs.map((input, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-white border border-amber-300 rounded-full text-sm text-amber-900 font-medium"
+                      className="px-3 py-1 bg-slate-700 border border-amber-400/40 rounded-full text-sm text-amber-300 font-medium"
                     >
                       {input}
                     </span>
@@ -185,9 +185,9 @@ export default function Home() {
         {step === 'prompt' && (
           <section>
             {/* Progress Bar */}
-            <div className="h-1 bg-gray-300 rounded-full mb-8 overflow-hidden">
+            <div className="h-1 bg-slate-700 rounded-full mb-8 overflow-hidden">
               <div
-                className="h-full bg-gradient-primary transition-all duration-300"
+                className="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300"
                 style={{ width: '100%' }}
               />
             </div>
@@ -213,7 +213,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-300 bg-white/50 backdrop-blur-sm py-6 px-4 text-center text-sm text-gray-600 mt-auto">
+      <footer className="border-t border-slate-700 bg-slate-800/50 backdrop-blur-sm py-6 px-4 text-center text-sm text-slate-400 mt-auto">
         <p className="max-w-2xl mx-auto">
           Built to help you create better prompts faster. No prompt engineering knowledge required.
         </p>

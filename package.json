@@ -15,11 +15,5 @@
     "next": "14.2.32",
     "react": "18.3.1",
     "react-dom": "18.3.1"
-  },
-  "devDependencies": {
-    "@tailwindcss/forms": "^latest",
-    "autoprefixer": "^latest",
-    "postcss": "^latest",
-    "tailwindcss": "^latest"
   }
 }
