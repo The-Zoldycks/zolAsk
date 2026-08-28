@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+}
+
+.header {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 3rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.headerContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  margin: 0;
+  opacity: 0.95;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+}
+
+.content {
+  flex: 1;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.section {
+  width: 100%;
+}
+
+.progressBar {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.goalDisplay {
+  background: white;
+  border: 2px solid #dbeafe;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+}
+
+.goalDisplay p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #374151;
+  font-family: 'Inter', sans-serif;
+}
+
+.goalDisplay strong {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.generateButton {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  flex: 1;
+  min-width: 150px;
+}
+
+.generateButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.generateButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.generateButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.resetButton {
+  padding: 1rem 2rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.resetButton:hover:not(:disabled) {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.resetButton:active:not(:disabled) {
+  background: #d1d5db;
+}
+
+.resetButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.selectedBox {
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.selectedLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #166534;
+  margin: 0 0 1rem 0;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.selectedItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.selectedItem {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #86efac;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #166534;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+.footer {
+  background: rgba(17, 24, 39, 0.05);
+  border-top: 1px solid #e5e7eb;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.footer p {
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .header {
+    padding: 2rem 1rem;
+  }
+
+  .content {
+    padding: 1.5rem 1rem;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .generateButton,
+  .resetButton {
+    width: 100%;
+  }
+}

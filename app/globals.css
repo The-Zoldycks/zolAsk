@@ -1,17 +1,71 @@
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-.font-brand { font-family: 'Bebas Neue', cursive; }
-.font-title { font-family: 'Manrope', sans-serif; }
-.font-subtitle { font-family: 'IBM Plex Sans', serif; }
-.font-body { font-family: 'Inter', sans-serif; }
-.font-nav { font-family: 'Space Grotesk', sans-serif; }
-.font-metric { font-family: 'Bricolage Grotesque', sans-serif; }
-.font-badge { font-family: 'Poppins', sans-serif; }
-.font-note { font-family: 'Caveat', cursive; }
-.font-mono { font-family: 'Google Sans Flex', monospace; }
-.font-serif-display { font-family: 'DM Serif Display', serif; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-img, video { display:block; max-width:100%; }
-a { color: inherit; }
+html,
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+  color: #111827;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+button {
+  font-family: 'Inter', inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: 'Inter', inherit;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
