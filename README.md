@@ -1,2 +1,3 @@
-# zolAsk
-Simple project to simplify efficient AI prompting
+ZolAsk
+
+Prompt Better.

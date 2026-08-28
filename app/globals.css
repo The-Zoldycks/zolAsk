@@ -1,0 +1,17 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; }
+
+.font-brand { font-family: 'Bebas Neue', cursive; }
+.font-title { font-family: 'Manrope', sans-serif; }
+.font-subtitle { font-family: 'IBM Plex Sans', serif; }
+.font-body { font-family: 'Inter', sans-serif; }
+.font-nav { font-family: 'Space Grotesk', sans-serif; }
+.font-metric { font-family: 'Bricolage Grotesque', sans-serif; }
+.font-badge { font-family: 'Poppins', sans-serif; }
+.font-note { font-family: 'Caveat', cursive; }
+.font-mono { font-family: 'Google Sans Flex', monospace; }
+.font-serif-display { font-family: 'DM Serif Display', serif; }
+
+img, video { display:block; max-width:100%; }
+a { color: inherit; }
