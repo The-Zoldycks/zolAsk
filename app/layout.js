@@ -6,11 +6,7 @@ export const metadata = {
     'Transform your rough ideas into professional, detailed prompts with AI guidance',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>{children}</body>
