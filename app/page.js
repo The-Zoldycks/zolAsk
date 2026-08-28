@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Sparkles, Zap, RotateCcw } from 'lucide-react';
 import InputBox from '@/components/InputBox';
 import SuggestionBubbles from '@/components/SuggestionBubbles';
 import PromptDisplay from '@/components/PromptDisplay';
 import LoadingState from '@/components/LoadingState';
 import ErrorState from '@/components/ErrorState';
 import { usePromptBuilder } from '@/hooks/usePromptBuilder';
-import styles from './page.module.css';
 
 export default function Home() {
   const {
@@ -28,7 +28,6 @@ export default function Home() {
 
   const [showFinalPromptButton, setShowFinalPromptButton] = useState(false);
 
-  // Show "Generate Prompt" button after sufficient selections
   useEffect(() => {
     const totalInputs =
       (state.selectedSuggestions?.length || 0) + (state.customInputs?.length || 0);
@@ -44,22 +43,25 @@ export default function Home() {
   };
 
   return (
-    <main className={styles.container}>
+    <div className="min-h-screen bg-gradient-soft flex flex-col">
       {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <h1 className={styles.title}>✨ zolAsk</h1>
-          <p className={styles.subtitle}>
+      <header className="bg-gradient-primary text-white py-8 px-4 shadow-lg">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <Sparkles size={32} />
+            <h1 className="text-4xl font-bold tracking-tight">zolAsk</h1>
+          </div>
+          <p className="text-lg text-blue-100">
             Transform your rough ideas into polished, structured prompts
           </p>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className={styles.content}>
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
         {/* Step 1: Initial Input */}
         {step === 'input' && (
-          <section className={styles.section}>
+          <section>
             <InputBox
               onSubmit={analyzeRequest}
               disabled={loading}
@@ -69,7 +71,6 @@ export default function Home() {
               <ErrorState
                 error={error}
                 onRetry={() => {
-                  // Reset and try again
                   resetAll();
                 }}
               />
@@ -82,18 +83,23 @@ export default function Home() {
 
         {/* Step 3: Suggestions */}
         {step === 'suggestions' && (
-          <section className={styles.section}>
-            <div className={styles.progressBar}>
-              <div className={styles.progress} style={{ width: '50%' }} />
+          <section>
+            {/* Progress Bar */}
+            <div className="h-1 bg-gray-300 rounded-full mb-8 overflow-hidden">
+              <div
+                className="h-full bg-gradient-primary transition-all duration-300"
+                style={{ width: '50%' }}
+              />
             </div>
 
-            <div className={styles.goalDisplay}>
-              <p>
-                <strong>Goal:</strong> {state.goal || state.originalInput}
+            {/* Goal Display */}
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-8">
+              <p className="text-gray-900 mb-2">
+                <strong className="text-primary-700">Goal:</strong> {state.goal || state.originalInput}
               </p>
               {state.category && (
-                <p>
-                  <strong>Category:</strong> {state.category}
+                <p className="text-gray-900">
+                  <strong className="text-primary-700">Category:</strong> {state.category}
                 </p>
               )}
             </div>
@@ -111,37 +117,43 @@ export default function Home() {
             )}
 
             {error && (
-              <ErrorState
-                error={error}
-                onRetry={() => refinePrompt()}
-              />
+              <ErrorState error={error} onRetry={() => refinePrompt()} />
             )}
 
-            <div className={styles.actionButtons}>
+            {/* Action Buttons */}
+            <div className="flex gap-3 mt-8 flex-wrap">
               {showFinalPromptButton && (
                 <button
                   onClick={handleGeneratePrompt}
-                  className={styles.generateButton}
                   disabled={loading}
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-accent text-white rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0 transition-all"
                 >
-                  {loading ? '⏳ Generating...' : '🎯 Generate Prompt'}
+                  <Zap size={18} />
+                  {loading ? 'Generating...' : 'Generate Prompt'}
                 </button>
               )}
               <button
                 onClick={resetAll}
-                className={styles.resetButton}
                 disabled={loading}
+                className="flex items-center gap-2 px-6 py-3 bg-gray-200 text-gray-900 rounded-lg font-semibold hover:bg-gray-300 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
               >
-                🔄 Start Over
+                <RotateCcw size={18} />
+                Start Over
               </button>
             </div>
 
+            {/* Selected Items */}
             {state.selectedSuggestions.length > 0 && (
-              <div className={styles.selectedBox}>
-                <p className={styles.selectedLabel}>Your selections so far:</p>
-                <div className={styles.selectedItems}>
+              <div className="bg-accent-50 border-2 border-accent-200 rounded-lg p-4 mt-6">
+                <p className="text-sm font-semibold text-accent-700 mb-3 uppercase tracking-wide">
+                  Your selections so far
+                </p>
+                <div className="flex flex-wrap gap-2">
                   {state.selectedSuggestions.map((suggestion, idx) => (
-                    <span key={idx} className={styles.selectedItem}>
+                    <span
+                      key={idx}
+                      className="px-3 py-1 bg-white border border-accent-300 rounded-full text-sm text-accent-900 font-medium"
+                    >
                       {suggestion}
                     </span>
                   ))}
@@ -150,11 +162,16 @@ export default function Home() {
             )}
 
             {state.customInputs.length > 0 && (
-              <div className={styles.selectedBox}>
-                <p className={styles.selectedLabel}>Your custom additions:</p>
-                <div className={styles.selectedItems}>
+              <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 mt-4">
+                <p className="text-sm font-semibold text-amber-700 mb-3 uppercase tracking-wide">
+                  Your custom additions
+                </p>
+                <div className="flex flex-wrap gap-2">
                   {state.customInputs.map((input, idx) => (
-                    <span key={idx} className={styles.selectedItem}>
+                    <span
+                      key={idx}
+                      className="px-3 py-1 bg-white border border-amber-300 rounded-full text-sm text-amber-900 font-medium"
+                    >
                       {input}
                     </span>
                   ))}
@@ -166,9 +183,13 @@ export default function Home() {
 
         {/* Step 4: Final Prompt */}
         {step === 'prompt' && (
-          <section className={styles.section}>
-            <div className={styles.progressBar}>
-              <div className={styles.progress} style={{ width: '100%' }} />
+          <section>
+            {/* Progress Bar */}
+            <div className="h-1 bg-gray-300 rounded-full mb-8 overflow-hidden">
+              <div
+                className="h-full bg-gradient-primary transition-all duration-300"
+                style={{ width: '100%' }}
+              />
             </div>
 
             {loading ? (
@@ -185,21 +206,18 @@ export default function Home() {
             )}
 
             {error && (
-              <ErrorState
-                error={error}
-                onRetry={() => handleGeneratePrompt()}
-              />
+              <ErrorState error={error} onRetry={() => handleGeneratePrompt()} />
             )}
           </section>
         )}
-      </div>
+      </main>
 
       {/* Footer */}
-      <footer className={styles.footer}>
-        <p>
+      <footer className="border-t border-gray-300 bg-white/50 backdrop-blur-sm py-6 px-4 text-center text-sm text-gray-600 mt-auto">
+        <p className="max-w-2xl mx-auto">
           Built to help you create better prompts faster. No prompt engineering knowledge required.
         </p>
       </footer>
-    </main>
+    </div>
   );
 }
