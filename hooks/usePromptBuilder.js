@@ -1,248 +1,67 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-/**
- * Custom hook for managing zolAsk prompt state and interactions
- */
+const initialState = {
+  originalInput: '', category: '', goal: '', parameters: {}, missingParameters: [],
+  selectedSuggestions: [], customInputs: [], currentPrompt: '', summary: '',
+};
+
+async function request(path, body) {
+  const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Unable to complete that request.');
+  return data;
+}
+
 export function usePromptBuilder() {
-  const [state, setState] = useState({
-    originalInput: '',
-    category: '',
-    goal: '',
-    parameters: {},
-    missingParameters: [],
-    selectedSuggestions: [],
-    customInputs: [],
-    currentPrompt: '',
-    summary: '',
-  });
-
+  const [state, setState] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentSuggestions, setCurrentSuggestions] = useState([]);
-  const [step, setStep] = useState('input'); // input, analyzing, suggestions, prompt
+  const [step, setStep] = useState('input');
 
-  /**
-   * Analyze initial user request
-   */
   const analyzeRequest = useCallback(async (userRequest) => {
-    setLoading(true);
-    setError('');
-
+    setLoading(true); setError(''); setStep('analyzing');
     try {
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userRequest }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to analyze request');
-      }
-
-      const analysis = await response.json();
-
-      setState((prev) => ({
-        ...prev,
-        originalInput: userRequest,
-        category: analysis.category || '',
-        goal: analysis.goal || '',
-        parameters: analysis.knownParameters || {},
-        missingParameters: analysis.missingParameters || [],
-      }));
-
-      setCurrentQuestion(analysis.nextQuestion || 'What would you like to refine?');
-      setCurrentSuggestions(analysis.suggestions || []);
-      setStep('suggestions');
-    } catch (err) {
-      setError(err.message);
-      setStep('input');
-    } finally {
-      setLoading(false);
-    }
+      const analysis = await request('/api/analyze', { userRequest });
+      setState({ ...initialState, originalInput: userRequest, category: analysis.category, goal: analysis.goal, parameters: analysis.knownParameters, missingParameters: analysis.missingParameters });
+      setCurrentQuestion(analysis.nextQuestion); setCurrentSuggestions(analysis.suggestions); setStep('suggestions');
+    } catch (err) { setError(err.message); setStep('input'); } finally { setLoading(false); }
   }, []);
 
-  /**
-   * Handle suggestion selection
-   */
-  const selectSuggestion = useCallback(async (suggestion) => {
-    setLoading(true);
-    setError('');
+  const updateSuggestions = useCallback(async (nextState) => {
+    const result = await request('/api/suggestions', { promptState: nextState });
+    setCurrentQuestion(result.nextQuestion); setCurrentSuggestions(result.suggestions);
+  }, []);
 
-    const newState = {
-      ...state,
-      selectedSuggestions: [...state.selectedSuggestions, suggestion],
-    };
-    setState(newState);
+  const addValue = useCallback(async (field, value) => {
+    if (!value || loading || state[field].includes(value)) return;
+    const nextState = { ...state, [field]: [...state[field], value] };
+    setState(nextState); setLoading(true); setError('');
+    try { await updateSuggestions(nextState); } catch (err) { setState(state); setError(err.message); } finally { setLoading(false); }
+  }, [loading, state, updateSuggestions]);
 
-    try {
-      const response = await fetch('/api/suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ promptState: newState }),
-      });
+  const removeValue = useCallback((field, value) => {
+    setState((current) => ({ ...current, [field]: current[field].filter((item) => item !== value) }));
+  }, []);
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to generate suggestions');
-      }
-
-      const result = await response.json();
-      setCurrentQuestion(result.nextQuestion || 'Any other changes?');
-      setCurrentSuggestions(result.suggestions || []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [state]);
-
-  /**
-   * Handle custom input
-   */
-  const addCustomInput = useCallback(async (input) => {
-    setLoading(true);
-    setError('');
-
-    const newState = {
-      ...state,
-      customInputs: [...state.customInputs, input],
-    };
-    setState(newState);
-
-    try {
-      const response = await fetch('/api/suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ promptState: newState }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to generate suggestions');
-      }
-
-      const result = await response.json();
-      setCurrentQuestion(result.nextQuestion || 'Any other changes?');
-      setCurrentSuggestions(result.suggestions || []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [state]);
-
-  /**
-   * Generate final prompt
-   */
   const generateFinalPrompt = useCallback(async () => {
-    setLoading(true);
-    setError('');
-
+    setLoading(true); setError('');
     try {
-      const response = await fetch('/api/prompt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ promptState: state }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to generate prompt');
-      }
-
-      const result = await response.json();
-      setState((prev) => ({
-        ...prev,
-        currentPrompt: result.prompt || '',
-        summary: result.summary || '',
-      }));
-
-      setStep('prompt');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+      const result = await request('/api/prompt', { promptState: state });
+      setState((current) => ({ ...current, currentPrompt: result.prompt, summary: result.summary })); setStep('prompt');
+    } catch (err) { setError(err.message); } finally { setLoading(false); }
   }, [state]);
 
-  /**
-   * Refine prompt further
-   */
   const refinePrompt = useCallback(async () => {
-    setStep('suggestions');
-    setLoading(true);
-    setError('');
+    setStep('suggestions'); setLoading(true); setError('');
+    try { await updateSuggestions(state); } catch (err) { setError(err.message); } finally { setLoading(false); }
+  }, [state, updateSuggestions]);
 
-    try {
-      const response = await fetch('/api/suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ promptState: state }),
-      });
+  const editPrompt = useCallback((currentPrompt) => setState((current) => ({ ...current, currentPrompt })), []);
+  const resetAll = useCallback(() => { setState(initialState); setCurrentQuestion(''); setCurrentSuggestions([]); setStep('input'); setError(''); setLoading(false); }, []);
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to generate suggestions');
-      }
-
-      const result = await response.json();
-      setCurrentQuestion(result.nextQuestion || 'Any other changes?');
-      setCurrentSuggestions(result.suggestions || []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [state]);
-
-  /**
-   * Edit the current prompt
-   */
-  const editPrompt = useCallback((newPrompt) => {
-    setState((prev) => ({
-      ...prev,
-      currentPrompt: newPrompt,
-    }));
-  }, []);
-
-  /**
-   * Reset to start
-   */
-  const resetAll = useCallback(() => {
-    setState({
-      originalInput: '',
-      category: '',
-      goal: '',
-      parameters: {},
-      missingParameters: [],
-      selectedSuggestions: [],
-      customInputs: [],
-      currentPrompt: '',
-      summary: '',
-    });
-    setCurrentQuestion('');
-    setCurrentSuggestions([]);
-    setStep('input');
-    setError('');
-  }, []);
-
-  return {
-    state,
-    loading,
-    error,
-    currentQuestion,
-    currentSuggestions,
-    step,
-    analyzeRequest,
-    selectSuggestion,
-    addCustomInput,
-    generateFinalPrompt,
-    refinePrompt,
-    editPrompt,
-    resetAll,
-  };
+  return { state, loading, error, currentQuestion, currentSuggestions, step, analyzeRequest, selectSuggestion: (value) => addValue('selectedSuggestions', value), addCustomInput: (value) => addValue('customInputs', value), removeSelection: (value) => removeValue('selectedSuggestions', value), removeCustomInput: (value) => removeValue('customInputs', value), generateFinalPrompt, refinePrompt, editPrompt, resetAll };
 }
